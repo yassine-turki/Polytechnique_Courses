@@ -533,13 +533,13 @@ Definition state := 'I_p -> nat.
 Definition rows (s : state) : list nat :=
   map (fun i => s i) (enum 'I_p).
 
-(* We prove that the size of [rows s] if equal to [p] where [size] is   *)
+(* We prove that the size of [rows s] is equal to [p] where [size] is   *)
 (* defined as follow:                                                   *)
 (*                                                                      *)
 (* Fixpoint size (s : seq T) :=                                         *)
 (*   match s with                                                       *)
 (*   | nil => 0                                                         *)
-(*   | cons _ s' => S (size s)                                          *)
+(*   | cons _ s' => S (size s')                                         *)
 (*   end.                                                               *)
 
 Lemma size_rows (s : state) : size (rows s) = p.
@@ -574,7 +574,7 @@ Inductive R (i : 'I_p) (s1 s2 : state) : Prop :=
    -> R i s1 s2.
   
 (* -------------------------------------------------------------------- *)
-(* The weight a of Nim state is obtained by xor'ing the number of       *)
+(* The weight of a Nim state is obtained by xor'ing the number of       *)
 (* matches (in 1-complement) for all the game rows.                     *)
 
 (* First, write a function [weight_r] that takes a list [s] of natural  *)
@@ -604,12 +604,11 @@ Lemma weight_empty : weight (fun=> 0) = 0%:B.
 Proof.
 (* We start by unfolding the definition of [weight] & [rows]            *)
 rewrite /weight /rows.
-
 (* The proof can now be done by induction over [enum 'I_p]              *)
-induction (enum 'I_p);simpl;trivial.
+induction (enum 'I_p); simpl; trivial.
 rewrite IHl.
 rewrite n2b0.
-apply bxor0b.
+apply bxorb0.
 Qed.
 
 (* -------------------------------------------------------------------- *)
@@ -619,8 +618,7 @@ Qed.
 
 Lemma weight_r0: weight_r nil = bits0.
 Proof.
-simpl.
-by done.
+simpl; reflexivity.
 Qed.
 
 Lemma weight_r1 (n : nat): weight_r [:: n] = n2b n.
@@ -629,12 +627,11 @@ rewrite /weight_r.
 apply bxorb0.
 Qed.
 
-
 Lemma weight_rS (n : nat) (ns : list nat) :
   weight_r (n :: ns) = n2b n .+ weight_r ns.
 Proof.
 rewrite /weight_r.
-by done.
+reflexivity.
 Qed.
 
 (* Here, [++] denotes [cat], the list-concatenation function.           *)
@@ -651,12 +648,10 @@ Lemma weight_rD (r s : list nat) :
   weight_r (r ++ s) = bxor (weight_r r) (weight_r s).
 Proof.
 induction r;simpl.
-rewrite bxor0b;trivial.
+rewrite bxor0b; reflexivity.
 rewrite IHr.
-apply bxorA. (* Associativity *)
+apply bxorA.
 Qed.
-
-
 
 (* -------------------------------------------------------------------- *)
 (* We can describe how the weight evolves after one turn                *)
@@ -669,7 +664,9 @@ Lemma RP (i : 'I_p) (s1 s2 : state) : R i s1 s2 ->
       , rows s1 = p ++ (s1 i) :: q
       & rows s2 = p ++ (s2 i) :: q].
 Proof.
-case=> lt_s eq_s; exists (take i (rows s1)), (drop i.+1 (rows s1)); split.
+case=> lt_s eq_s.
+exists (take i (rows s1)), (drop i.+1 (rows s1)).
+split.
 - by rewrite size_take size_rows ltn_ord.
 - rewrite -cat1s catA cats1 -[s1 i]nth_rows /=.
   by rewrite -take_nth ?size_rows // cat_take_drop.
@@ -691,7 +688,7 @@ have ->: drop i.+1 (rows s1) = drop i.+1 (rows s2).
   rewrite !(nth_rows _ (Ordinal lt_jp)) /=.
   by apply/esym/eq_s; rewrite -val_eqE /= gtn_eqF.
 by rewrite -take_nth ?size_rows // cat_take_drop.
-Qed.    
+Qed.
 
 (* We can now state and prove how the weight of the state evolves       *)
 (* between two states related by [R].                                   *)
@@ -702,16 +699,15 @@ Qed.
 Lemma turn_weight (i : 'I_p) (s1 s2 : state) :
   R i s1 s2 -> weight s2 = weight s1 .+ n2b (s1 i) .+ n2b (s2 i).
 Proof.
-move=>RE.
-apply RP in RE.
+move => R.
+apply RP in R.
 rewrite /weight.
-destruct RE.
+destruct R.
 destruct H.
 destruct H.
 rewrite H0.
 rewrite H1.
 rewrite weight_rD.
-simpl.
 rewrite weight_rD.
 simpl.
 symmetry.
@@ -719,7 +715,7 @@ rewrite (bxorC (n2b (s1 i)) (weight_r x0)).
 rewrite bxorA.
 rewrite bxorC.
 rewrite -bxorA.
-rewrite bxorbb.
+rewrite (bxorbb (n2b (s1 i))).
 rewrite bxorb0.
 rewrite bxorC.
 rewrite bxorA.
@@ -737,7 +733,6 @@ Qed.
 (* Hint: b1 (+) b2 = true iff b1 = b2.                                  *)
 (* Hint: you can use contraposition, e.g. [contra_neq_not].             *)
 
-
 Lemma z2nz (i : 'I_p) (s1 s2 : state) :
   R i s1 s2 -> weight s1 = 0%:B -> weight s2 <> 0%:B.
 Proof.
@@ -747,14 +742,13 @@ move=>R.
 move : (turn_weight R) => R1.
 move =>ws1 ws2.
 have H:=R.
-destruct R as [R P].
+destruct R as [lt_s eq_s].
 assert (eqs : n2b (s1 i) = n2b (s2 i)).
-+
-rewrite (turn_weight H) in ws2.
++rewrite (turn_weight H) in ws2.
 rewrite ws1 in ws2.
 rewrite bxor0b in ws2.
 assert(n0: n2b (s1 i) .+ 0%:B = n2b (s1 i)).
-rewrite bxorb0.
++rewrite bxorb0.
 trivial.
 rewrite -ws2 in n0.
 rewrite bxorA in n0.
@@ -765,8 +759,8 @@ rewrite bxor0b in n0.
 symmetry.
 assumption.
 +apply n2b_inj in eqs.
-rewrite eqs in R.
-by rewrite (ltnn (s2 i)) in R.
+rewrite eqs in lt_s.
+by rewrite (ltnn (s2 i)) in lt_s.
 Qed.
 
 (* -------------------------------------------------------------------- *)
@@ -776,159 +770,121 @@ Qed.
 (* Hint: for this one, you are on your own.                             *)
 (* Hint: https://en.wikipedia.org/wiki/Nim#Proof_of_the_winning_formula *)
 
-Lemma existence (s: state) : forall (j: nat), (weight s).[j] = true ->
+Lemma func_existence (s: state) : forall (j: nat), (weight s).[j] = true ->
   exists (i: 'I_p), (n2b (s i) ).[j] = true.
 Proof.
-
 move => j ws.
 apply/existsP/existsPn => /=.
 unfold not.
-move => x.
-have contr: (weight s).[j] = false.
-rewrite /weight/rows.
+move => H.
+have contradict: (weight s).[j] = false.
++rewrite /weight/rows.
 induction (enum 'I_p); simpl.
 apply b0E.
 rewrite bxorE.
 rewrite IHl.
-move: (x a) => fa.
-apply negbTE in fa.
-rewrite fa; trivial.
-move: ws.
-rewrite contr.
+move: (H a) => Ha.
+apply negbTE in Ha.
+rewrite Ha; trivial.
++move: ws.
+rewrite contradict.
 discriminate.
 Qed.
 
-Definition F (b : bits) (i : 'I_p) (s: state) (j : 'I_p) : state :=
-    if j == i then s else s .
+Lemma func_ltnat (n m : nat): n.-1 < m -> n <= m.  
+Proof.
+induction n.
+induction m; try done.
+simpl.
+trivial.
+Qed.
 
+Lemma func_ltbit (xk yk : bits) : yk <> 0%:B -> size(yk) <= size(xk) -> xk.[(size yk).-1] = true -> (b2n (xk.+yk)) < (b2n xk).
+Proof.
+move => ykn0 ss xbit. 
+apply lt_n2b.
+exists (size yk).-1.
++ move => i slti.
+rewrite bxorE.
+move : (func_ltnat slti) => xki.
+move : (bit_oversize xki).
+move => yki.
+rewrite yki.
+case : xk.[i] ; trivial.
++ rewrite bxorE.
+rewrite xbit; simpl.
+destruct (hibit_neq0W yk) as [H0 H1].
+move : (H0 ykn0).
+move => result.
+rewrite result.
+trivial.
+Qed.
+
+Lemma func_bit_size (b:bits) (i:nat) : b.[i] -> i < size b.
+Proof.
+move => bi.
+have : (size b <= i -> ~~b.[i]).
++ move => sbi.
+move : (bit_oversize sbi).
+rewrite bi.
+done.
+rewrite bi; simpl.
+destruct (i < size b) eqn:ltib; trivial.
++ move : (ltnNge i (size b)) => reverse. 
+move : ltib.
+rewrite reverse.
+case : (size b <= i);try done.
+move => _ tf.
+apply tf; trivial.
+Qed.
 
 Lemma nz2z (s : state) : weight s <> 0%:B ->
   exists (i : 'I_p), exists (s' : state), weight s' = 0%:B /\ R i s s'.
 Proof.
-rewrite -bits_neq0W.
-move => [d ws].
-move: (existence ws) => ex.
-move: ex => [i x2].
+move => ws.
+rewrite hibit_neq0W in ws.
+move: (func_existence ws) => ex.
+move: ex => [i H].
 exists i.
-remember (fun (j : 'I_p) => (if (i==j) then (b2n (bxor (n2b (s i)) (weight s))) else (s j))) as s1.
+set (xk := (n2b (s i))).
+set (yk := (bxor xk (weight s))).
+set (s1 := (fun (j : 'I_p) => (if (i==j) then (b2n yk) else (s j)))).
 exists s1.
+
 assert (R i s s1).
-constructor.
-assert ((b2n (n2b (s1 i))) = (s1 i)).
-rewrite n2bK; reflexivity.
-assert ((b2n (n2b (s i))) = (s i)).
-rewrite n2bK; reflexivity.
-rewrite -H; rewrite -H0.
-apply lt_n2b.
-exists d.
-move => j dj.
++ constructor.
+rewrite /s1 eqxx /=.
+rewrite /yk/weight.
+assert ((b2n xk) = (s i)).
+rewrite /xk; rewrite n2bK; reflexivity.
+rewrite -H0.
+apply func_ltbit.
+rewrite hibit_neq0W.
+rewrite ws; done.
+move: (func_bit_size H) => sizebit.
+apply func_ltnat.
+apply sizebit.
+exact H.
++ move => j ij.
+rewrite /(~~_) in ij.
+rewrite /s1.
+rewrite eq_sym in ij.
+case_eq (i==j).
+move => eq.
+rewrite eq in ij.
+move: ij.
+discriminate.
+move => eq; reflexivity.
 
-apply bits_eqW.
++ split.
+rewrite (turn_weight H0).
+rewrite /s1.
+rewrite (eq_refl i).
+rewrite b2nK.
+rewrite /yk/xk/weight.
+rewrite (bxorC (n2b (s i)) (weight_r (rows s))).
+apply bxorbb.
+assumption.
+Qed.
 
-3:{
-intro j.
-move=>ineq.
-rewrite Heqs1.
-case (_==_).
-2:{
-reflexivity.
-}
-Search bxor.
-induction (enum 'I_p).
-rewrite -weight_rS.
-
--
-rewrite -H.
-
-
-
-unfold n2b.
-induction i.
-
-unfold ws.
-
-induction d.
-rewrite bxorbb.
-exists s1.
-split.
-2:{
-constructor.
-rewrite Heqs1.
-Search state.
-case (_ == _).
-rewrite Heqs1.
-rewrite b2nE.
-rewrite -bxorA.
-rewrite weight_empty.
-Search bxor.
-
-rewrite -bits_neq0W.
-move => [i ws].
-move: (existence ws) => ex.
-move: ex => [i0 x2].
-exists i0.
-rewrite lt_n2b
-(*unfold weight unfold row unfold something
-induction.*)
-
-(* bit_oversize*)
-
-(*define s' *)
-
-
-remember (s) as s'.
-exists s'.
-split.
-
-rewrite bigD1_seq .
-
-move: (F (n2b i) i0 s i0) => try.
-exists try.
-split.
-rewrite -weight_empty.
-Search weight.
-Search bxor.-
-rewrite /weight/rows.
-
-2:{
-apply
-assert
-
-apply/existsP/existsPn => /=.
-Search bxor.
-induction _.
-assert (exists i0).
-
-apply/existsP/existsPn => /=.
-rewrite /weight in ws.
-rewrite -weight_r1 in ws.
-apply (existence ws).
-pose i0 := size (weight s).-1.
-move: ws => [i ws2]. exists enum_i.
-rewrite -bits_neq0W in ws.
-
-
-Search bxor.
-compute.
-auto.
-
-induction _.
-rewrite lt_n2b.
-apply ws.
-
-induction _.
-exists i.
-
-apply bigD1_seq.
-induction _..
-
-exists 'I_P.
-destruct ws.
-rewrite weight_empty.
-
-rewrite bxorb0.
-apply turn_weight.
-Search exist.
-apply/exists/existsPn => /=.
-Admitted.
 End Nim.
