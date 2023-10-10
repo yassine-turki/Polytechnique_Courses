@@ -1,0 +1,8 @@
+irmovq $3, %rax
+irmovq $-8, %r8
+addq %r8, %rax
+jg LG
+irmovq $10, %rax
+jmp L2
+LG: irmovq $0, %rax
+L2: halt

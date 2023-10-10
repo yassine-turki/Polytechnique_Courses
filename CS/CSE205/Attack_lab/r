@@ -1,0 +1,5 @@
+set args "-isol.txt"
+b getbuf
+layout asm
+layout regs
+

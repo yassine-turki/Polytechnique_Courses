@@ -1,0 +1,342 @@
+#######################################################################
+# Test for copying block of size 63;
+#######################################################################
+	.pos 0
+main:	irmovq Stack, %rsp  	# Set up stack pointer
+
+	# Set up arguments for copy function and then invoke it
+	irmovq $63, %rdx		# src and dst have 63 elements
+	irmovq dest, %rsi	# dst array
+	irmovq src, %rdi	# src array
+	call ncopy		 
+	halt			# should halt with num nonzeros in %rax
+StartFun:
+#/* $begin ncopy-ys */
+##################################################################
+# ncopy.ys - Copy a src block of len words to dst.
+# Return the number of positive words (>0) contained in src.
+#
+# Name: Yassine Turki
+# ID: yassine.turki
+#
+# The hcl file was updated to support the function iaddq, which we use instead of updating registers since it is less costly
+# I used a five loop unrolling.
+# I created a mainloop that deducts 5 from len each time. 
+# After reading and writing the values, we check if any of the registers contain negative values, and update count accordingly
+# However, if len-5<0, we check manually the value of len and it goes through if statements for len = 3,2,1 or 4
+# Again, we read and write, then update count
+##################################################################
+# Do not modify this portion
+# Function prologue.
+# %rdi = src, %rsi = dst, %rdx = len
+ncopy:
+
+##################################################################
+# You can modify this portion
+  # Loop header
+  xorq %rax, %rax   # count = 0
+  iaddq $-5, %rdx   # len -5
+  jl reset          # if len-5<0, we go to reset
+
+MainLoop:
+    mrmovq (%rdi), %r8     # reading 5 values
+    mrmovq 8(%rdi), %r9    
+    mrmovq 16(%rdi), %r10   
+    mrmovq 24(%rdi), %r11   
+    mrmovq 32(%rdi), %r12   
+    rmmovq %r8, (%rsi)     # copying to dst
+    rmmovq %r9, 8(%rsi)   
+    rmmovq %r10, 16(%rsi)   
+    rmmovq %r11, 24(%rsi)   
+    rmmovq %r12, 32(%rsi)   
+
+# We now check if the values we copied are negative
+C1:
+    andq %r8, %r8   	# %r8 <= 0?
+    jle C2              # if so, go to the next if
+    iaddq $1, %rax      # count++
+
+C2:
+    andq %r9, %r9     # %r9 <= 0?
+    jle C3              # if so, go to the next if
+    iaddq $1, %rax      # count++
+
+C3:
+    andq %r10, %r10     # %r10 <= 0?
+    jle C4              # if so, go to the next if
+    iaddq $1, %rax      # count++
+
+C4:
+    andq %r11, %r11     # %r11 <= 0?
+    jle C5              # if so, go to the next if
+    iaddq $1, %rax      # count++
+
+C5:
+    andq %r12, %r12     # %r12 <= 0?
+    jle iter            # if so, goto iter
+    iaddq $1, %rax      # count++
+
+iter:
+    iaddq $40, %rdi     # Access the sixth adress of src
+    iaddq $40, %rsi     # Access the sixth adress of dst
+    iaddq $-5, %rdx     # len - 5
+    jge MainLoop        # if len is greater or equal to 0, we loop again
+
+reset:
+    iaddq $5, %rdx  # len + 5 (to cancel our substraction and move to the base cases)
+
+checklen:               # We cannot do the mainloop anymore, so we check the value of len 
+    andq %rdx, %rdx     # Check if len==0
+    je Done             # if yes, we go to Done
+    iaddq $-1, %rdx		# Check if len==1
+    je len1             # if yes, we go to len1
+    iaddq $-1, %rdx		# Check if len==2
+    je len2             # if yes, goto len2
+    iaddq $-1, %rdx		# Check if len==3
+    je len3             # ifyes, goto len3
+
+                        # if len==4, we exectue len4
+
+len4:
+    mrmovq (%rdi), %r8
+    mrmovq 8(%rdi), %r9
+    mrmovq 16(%rdi), %r10
+    mrmovq 24(%rdi), %r11
+    rmmovq %r8, (%rsi)
+    rmmovq %r9, 8(%rsi)
+    rmmovq %r10, 16(%rsi)
+    rmmovq %r11, 24(%rsi)
+
+# Here we update the count value
+count41:
+    andq %r8, %r8 	# %r8 <=0 ?
+    jle count42			# if yes, move to next value
+    iaddq $1, %rax		#else, add 1 to count
+count42:
+    andq %r9, %r9
+    jle count43
+    iaddq $1, %rax
+count43:
+    andq %r10, %r10
+    jle count44
+    iaddq $1, %rax
+count44:
+    andq %r11, %r11
+    jle Done
+    iaddq $1, %rax
+    jmp Done
+
+len3:
+    mrmovq (%rdi), %r8
+    mrmovq 8(%rdi), %r9
+    mrmovq 16(%rdi), %r10
+    rmmovq %r8, (%rsi)
+    rmmovq %r9, 8(%rsi)
+    rmmovq %r10, 16(%rsi)
+count31:
+    andq %r8, %r8
+    jle count32
+    iaddq $1, %rax
+count32:
+    andq %r9, %r9
+    jle count33
+    iaddq $1, %rax
+count33:
+    andq %r10, %r10
+    jle Done
+    iaddq $1, %rax
+    jmp Done
+
+len2:
+    mrmovq (%rdi), %r8
+    mrmovq 8(%rdi), %r9
+    rmmovq %r8, (%rsi)
+    rmmovq %r9, 8(%rsi)
+count21:
+    andq %r8, %r8
+    jle count22
+    iaddq $1, %rax
+count22:
+    andq %r9, %r9
+    jle Done
+    iaddq $1, %rax
+    jmp Done
+
+len1:
+    mrmovq (%rdi), %r8
+    rmmovq %r8, (%rsi)
+    andq %r8, %r8
+    jle Done
+    iaddq $1, %rax
+
+##################################################################
+# Do not modify the following section of code
+# Function epilogue.
+Done:
+    ret
+##################################################################
+# Keep the following label at the end of your function
+End:
+#/* $end ncopy-ys */
+EndFun:
+
+###############################
+# Source and destination blocks 
+###############################
+	.align 8
+src:
+	.quad 1
+	.quad 2
+	.quad -3
+	.quad -4
+	.quad -5
+	.quad 6
+	.quad -7
+	.quad 8
+	.quad -9
+	.quad -10
+	.quad -11
+	.quad 12
+	.quad -13
+	.quad -14
+	.quad -15
+	.quad 16
+	.quad 17
+	.quad -18
+	.quad -19
+	.quad -20
+	.quad -21
+	.quad -22
+	.quad 23
+	.quad 24
+	.quad -25
+	.quad 26
+	.quad -27
+	.quad -28
+	.quad 29
+	.quad 30
+	.quad -31
+	.quad 32
+	.quad -33
+	.quad 34
+	.quad -35
+	.quad -36
+	.quad -37
+	.quad -38
+	.quad -39
+	.quad 40
+	.quad 41
+	.quad -42
+	.quad -43
+	.quad -44
+	.quad 45
+	.quad 46
+	.quad -47
+	.quad -48
+	.quad -49
+	.quad 50
+	.quad 51
+	.quad -52
+	.quad 53
+	.quad 54
+	.quad 55
+	.quad 56
+	.quad 57
+	.quad 58
+	.quad 59
+	.quad 60
+	.quad 61
+	.quad 62
+	.quad 63
+	.quad 0xbcdefa # This shouldn't get moved
+
+	.align 16
+Predest:
+	.quad 0xbcdefa
+dest:
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+Postdest:
+	.quad 0xdefabc
+
+.align 8
+# Run time stack
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+
+Stack:

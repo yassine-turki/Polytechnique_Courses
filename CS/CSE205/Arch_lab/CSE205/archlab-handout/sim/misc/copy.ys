@@ -1,0 +1,27 @@
+#Name: Yassine Turki
+#ID: yassine.turki
+
+irmovq 0, %rax #sum
+mrmovq len, %rbx
+mrmovq src, %rcx
+
+
+.align 8
+# Source block
+src:
+        .quad 0x00a
+        .quad 0x0b0
+        .quad 0xc00
+
+# Destination block
+dst:
+        .quad 0x111
+        .quad 0x222
+        .quad 0x333
+
+len:
+        .quad 3
+
+sum:
+        .quad 0
+        

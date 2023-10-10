@@ -1,0 +1,8 @@
+0x000: 30f00300000000000000 | irmovq $3, %rax
+0x00a: 30f8f8ffffffffffffff | irmovq $-8, %r8
+0x014: 6080                 | addq %r8, %rax
+0x016: 763200000000000000   | jg LG
+0x01f: 30f00a00000000000000 | irmovq $10, %rax
+0x029: 703c00000000000000   | jmp L2
+0x032: 30f00000000000000000 | LG: irmovq $0, %rax
+0x03c: 00                   | L2: halt

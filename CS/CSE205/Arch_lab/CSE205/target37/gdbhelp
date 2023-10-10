@@ -1,0 +1,6 @@
+set args "-iphase2.txt"
+b getbuf
+layout asm
+layout regs
+r
+

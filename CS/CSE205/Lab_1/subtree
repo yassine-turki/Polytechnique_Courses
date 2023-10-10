@@ -1,0 +1,16 @@
+#!/bin/sh
+
+#Name: Yassine Turki
+#Userid: yassine.turki
+
+subtree() {
+  for subdir in "$1"/*; do
+    if [ -d "$subdir" ]; then
+      echo "$2$(basename "$subdir")"
+      subtree "$subdir" "| $2"
+    fi
+  done
+}
+
+subtree "$(pwd)" "| + "
+

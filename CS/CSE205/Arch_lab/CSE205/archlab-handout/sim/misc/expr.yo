@@ -1,0 +1,20 @@
+                            | #Name: Yassine Turki
+                            | #ID: yassine.turki
+                            | 
+0x000: 500f0001000000000000 |     mrmovq x, %rax # load x in rax
+0x00a: 501f0001000000000000 |     mrmovq x, %rcx # load x in rcx
+0x014: 30f30500000000000000 |     irmovq $5, %rbx # load 5 in rbx
+0x01e: 6130                 |     subq %rbx,%rax # do x-5
+0x020: 763c00000000000000   |     jg Ltrue # if x-5>0 jump Ltrue
+0x029: 30f20000000000000000 |     irmovq $0, %rdx
+0x033: 704600000000000000   |     jmp Lend # done else, jump to Lend
+0x03c:                      | Ltrue:
+0x03c: 30f20300000000000000 |     irmovq $3, %rdx
+0x046:                      | Lend:
+0x046: 6021                 |     addq %rdx,%rcx 
+0x048: 401f0801000000000000 |     rmmovq %rcx, y
+0x052: 00                   |     halt
+                            | 
+0x100:                      | .pos 0x100
+0x100: 0500000000000000     | x: .quad 0x05
+0x108: 0000000000000000     | y: .quad 0x00

@@ -1,0 +1,26 @@
+                            | #Name: Yassine Turki
+                            | #ID: yassine.turki
+                            | 
+0x000: 30f00000000000000000 | irmovq 0, %rax #sum
+0x00a: 503f5000000000000000 | mrmovq len, %rbx
+0x014: 501f2000000000000000 | mrmovq src, %rcx
+                            | 
+                            | 
+0x020:                      | .align 8
+                            | # Source block
+0x020:                      | src:
+0x020: 0a00000000000000     |         .quad 0x00a
+0x028: b000000000000000     |         .quad 0x0b0
+0x030: 000c000000000000     |         .quad 0xc00
+                            | 
+                            | # Destination block
+0x038:                      | dst:
+0x038: 1101000000000000     |         .quad 0x111
+0x040: 2202000000000000     |         .quad 0x222
+0x048: 3303000000000000     |         .quad 0x333
+                            | 
+0x050:                      | len:
+0x050: 0300000000000000     |         .quad 3
+                            | 
+0x058:                      | sum:
+0x058: 0000000000000000     |         .quad 0

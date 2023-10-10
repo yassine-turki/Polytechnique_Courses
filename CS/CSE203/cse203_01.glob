@@ -1,0 +1,169 @@
+DIGEST a8ec33232a43f917904bba56b480fcd4
+Fcse203_01
+R249:257 Coq.ssr.ssreflect <> <> lib
+ax 271:271 <> A
+ax 273:273 <> B
+ax 275:275 <> C
+ax 277:277 <> D
+prf 577:583 <> move_ex
+R588:591 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R587:587 cse203_01 <> A defax
+R593:596 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R592:592 cse203_01 <> B defax
+R597:597 cse203_01 <> A defax
+prf 1000:1012 <> assumption_ex
+R1017:1020 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1016:1016 cse203_01 <> A defax
+R1022:1025 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1021:1021 cse203_01 <> B defax
+R1026:1026 cse203_01 <> A defax
+prf 1305:1312 <> apply_ex
+R1317:1320 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1316:1316 cse203_01 <> A defax
+R1322:1325 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1321:1321 cse203_01 <> B defax
+R1326:1326 cse203_01 <> A defax
+prf 1678:1680 <> ex0
+R1685:1688 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1684:1684 cse203_01 <> A defax
+R1689:1689 cse203_01 <> A defax
+prf 1731:1733 <> ex1
+binder 1744:1744 <> A:5
+R1755:1758 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1754:1754 cse203_01 <> A:5 var
+R1759:1759 cse203_01 <> A:5 var
+prf 1803:1805 <> ex2
+R1809:1809 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1816:1820 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1811:1814 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1810:1810 cse203_01 <> A defax
+R1815:1815 cse203_01 <> B defax
+R1821:1821 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1828:1832 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1823:1826 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1822:1822 cse203_01 <> B defax
+R1827:1827 cse203_01 <> C defax
+R1834:1837 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1833:1833 cse203_01 <> A defax
+R1838:1838 cse203_01 <> C defax
+prf 1910:1912 <> ex3
+R1916:1916 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1928:1932 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1918:1921 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1917:1917 cse203_01 <> A defax
+R1923:1926 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1922:1922 cse203_01 <> B defax
+R1927:1927 cse203_01 <> C defax
+R1933:1933 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1940:1944 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1935:1938 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1934:1934 cse203_01 <> B defax
+R1939:1939 cse203_01 <> A defax
+R1946:1949 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1945:1945 cse203_01 <> B defax
+R1950:1950 cse203_01 <> C defax
+prf 2216:2225 <> demo_conj1
+R2229:2229 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R2236:2240 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R2231:2234 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R2230:2230 cse203_01 <> A defax
+R2235:2235 cse203_01 <> B defax
+R2241:2241 cse203_01 <> A defax
+prf 2300:2309 <> demo_conj2
+R2314:2317 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R2313:2313 cse203_01 <> A defax
+R2319:2322 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R2318:2318 cse203_01 <> B defax
+R2324:2327 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R2323:2323 cse203_01 <> A defax
+R2328:2328 cse203_01 <> B defax
+prf 2408:2415 <> conj_ex1
+R2424:2428 Coq.Init.Logic <> ::type_scope:x_'<->'_x not
+R2419:2422 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R2418:2418 cse203_01 <> A defax
+R2423:2423 cse203_01 <> B defax
+R2430:2433 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R2429:2429 cse203_01 <> B defax
+R2434:2434 cse203_01 <> A defax
+prf 2752:2761 <> demo_disj1
+R2766:2769 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R2765:2765 cse203_01 <> A defax
+R2771:2774 Coq.Init.Logic <> ::type_scope:x_'\/'_x not
+R2770:2770 cse203_01 <> A defax
+R2775:2775 cse203_01 <> B defax
+prf 2822:2831 <> demo_disj2
+R2836:2839 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R2835:2835 cse203_01 <> B defax
+R2841:2844 Coq.Init.Logic <> ::type_scope:x_'\/'_x not
+R2840:2840 cse203_01 <> A defax
+R2845:2845 cse203_01 <> B defax
+prf 2893:2902 <> demo_disj3
+R2912:2915 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R2907:2910 Coq.Init.Logic <> ::type_scope:x_'\/'_x not
+R2906:2906 cse203_01 <> A defax
+R2911:2911 cse203_01 <> B defax
+R2916:2916 cse203_01 <> C defax
+prf 3008:3015 <> disj_ex1
+R3026:3030 Coq.Init.Logic <> ::type_scope:x_'<->'_x not
+R3021:3024 Coq.Init.Logic <> ::type_scope:x_'\/'_x not
+R3020:3020 cse203_01 <> A defax
+R3025:3025 cse203_01 <> B defax
+R3032:3035 Coq.Init.Logic <> ::type_scope:x_'\/'_x not
+R3031:3031 cse203_01 <> B defax
+R3036:3036 cse203_01 <> A defax
+prf 3197:3204 <> disj_ex2
+R3214:3217 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R3209:3212 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R3208:3208 cse203_01 <> A defax
+R3213:3213 cse203_01 <> B defax
+R3219:3222 Coq.Init.Logic <> ::type_scope:x_'\/'_x not
+R3218:3218 cse203_01 <> A defax
+R3223:3223 cse203_01 <> B defax
+R3456:3458 Coq.Init.Logic <> not def
+prf 3537:3545 <> demo_not1
+R3554:3557 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R3549:3553 Coq.Init.Logic <> False ind
+R3558:3558 cse203_01 <> A defax
+prf 3655:3661 <> not_ex1
+R3666:3669 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R3665:3665 cse203_01 <> A defax
+R3670:3671 Coq.Init.Logic <> ::type_scope:'~'_x not
+R3674:3674 Coq.Init.Logic <> ::type_scope:'~'_x not
+R3672:3672 Coq.Init.Logic <> ::type_scope:'~'_x not
+R3673:3673 cse203_01 <> A defax
+prf 3730:3736 <> not_ex2
+R3741:3741 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R3748:3752 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R3743:3746 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R3742:3742 cse203_01 <> A defax
+R3747:3747 cse203_01 <> B defax
+R3755:3758 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R3753:3753 Coq.Init.Logic <> ::type_scope:'~'_x not
+R3754:3754 cse203_01 <> B defax
+R3759:3759 Coq.Init.Logic <> ::type_scope:'~'_x not
+R3760:3760 cse203_01 <> A defax
+prf 3832:3838 <> not_ex3
+R3842:3843 Coq.Init.Logic <> ::type_scope:'~'_x not
+R3844:3845 Coq.Init.Logic <> ::type_scope:'~'_x not
+R3853:3853 Coq.Init.Logic <> ::type_scope:'~'_x not
+R3847:3850 Coq.Init.Logic <> ::type_scope:x_'\/'_x not
+R3846:3846 cse203_01 <> A defax
+R3851:3851 Coq.Init.Logic <> ::type_scope:'~'_x not
+R3852:3852 cse203_01 <> A defax
+prf 3939:3945 <> not_ex4
+R3963:3967 Coq.Init.Logic <> ::type_scope:x_'<->'_x not
+R3950:3950 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R3957:3961 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R3952:3955 Coq.Init.Logic <> ::type_scope:x_'\/'_x not
+R3951:3951 cse203_01 <> A defax
+R3956:3956 cse203_01 <> B defax
+R3962:3962 cse203_01 <> C defax
+R3968:3968 Coq.Init.Logic <> ::type_scope:x_'\/'_x not
+R3975:3980 Coq.Init.Logic <> ::type_scope:x_'\/'_x not
+R3987:3987 Coq.Init.Logic <> ::type_scope:x_'\/'_x not
+R3970:3973 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R3969:3969 cse203_01 <> A defax
+R3974:3974 cse203_01 <> C defax
+R3982:3985 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R3981:3981 cse203_01 <> B defax
+R3986:3986 cse203_01 <> C defax

@@ -1,0 +1,20 @@
+#Name: Yassine Turki
+#ID: yassine.turki
+
+    mrmovq x, %rax # load x in rax
+    mrmovq x, %rcx # load x in rcx
+    irmovq $5, %rbx # load 5 in rbx
+    subq %rbx,%rax # do x-5
+    jg Ltrue # if x-5>0 jump Ltrue
+    irmovq $0, %rdx
+    jmp Lend # done else, jump to Lend
+Ltrue:
+    irmovq $3, %rdx
+Lend:
+    addq %rdx,%rcx 
+    rmmovq %rcx, y
+    halt
+
+.pos 0x100
+x: .quad 0x05
+y: .quad 0x00

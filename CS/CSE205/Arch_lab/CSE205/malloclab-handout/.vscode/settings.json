@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "random": "c",
+        "*.tcc": "c",
+        "bitset": "c",
+        "initializer_list": "c",
+        "array": "c",
+        "hashtable": "c",
+        "assert.h": "c"
+    }
+}
