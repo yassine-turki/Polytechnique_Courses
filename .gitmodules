@@ -1,3 +1,6 @@
 [submodule "CSE204"]
 	path = CSE204
 	url = https://github.com/yassine-turki/CSE204.git
+[submodule "CSE201/project"]
+	path = CSE201/project
+	url = https://github.com/sebiinfo/Authentification-System.git
